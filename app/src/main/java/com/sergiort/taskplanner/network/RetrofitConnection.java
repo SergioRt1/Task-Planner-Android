@@ -12,7 +12,7 @@ public class RetrofitConnection {
     private static void createRetrofitConnection() {
         if(authService == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http:/10.0.2.2:8080") //localhost for emulator
+                    .baseUrl("https://api-task-planner.herokuapp.com") //localhost for emulator
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
