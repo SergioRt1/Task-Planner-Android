@@ -19,4 +19,8 @@ public class Storage {
     public void saveToken(Token token){
         sharedPreferences.edit().putString( TOKEN_KEY, token.getAccessToken()).apply();
     }
+
+    public void clear(){
+        sharedPreferences.edit().remove( TOKEN_KEY ).apply();
+    }
 }

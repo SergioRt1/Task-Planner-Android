@@ -15,6 +15,7 @@
         android:onClick="onLogin"
         android:text="@string/login_button"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.529"
