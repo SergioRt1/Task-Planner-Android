@@ -10,6 +10,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.sergiort.taskplanner.R;
+import com.sergiort.taskplanner.network.RetrofitConnection;
+import com.sergiort.taskplanner.network.data.Task;
 import com.sergiort.taskplanner.utils.Storage;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -18,15 +20,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 
-public class MainActivity extends AppCompatActivity 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Storage storage;
+    private final ExecutorService executorService = Executors.newFixedThreadPool( 1 );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         storage = new Storage( this );
+        RetrofitConnection.setStorage(this.storage);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,6 +56,21 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        //test getTasks from API
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response<List<Task>> response = RetrofitConnection.getTaskService().getTaskByUser("SergioRt").execute();
+                    if (response.isSuccessful()) {
+                        List<Task> tasks = response.body();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

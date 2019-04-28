@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         this.storage = new Storage(this);
+        RetrofitConnection.setStorage(this.storage);
         this.usernameEditText = findViewById(R.id.editTextUsername);
         this.passwordEditText = findViewById(R.id.editTextPassword);
     }

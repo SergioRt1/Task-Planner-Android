@@ -13,14 +13,18 @@ public class Storage {
     private final SharedPreferences sharedPreferences;
 
     public Storage(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(context.getString( R.string.preference_file_key ), Context.MODE_PRIVATE );
+        this.sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
-    public void saveToken(Token token){
-        sharedPreferences.edit().putString( TOKEN_KEY, token.getAccessToken()).apply();
+    public void saveToken(Token token) {
+        sharedPreferences.edit().putString(TOKEN_KEY, token.getAccessToken()).apply();
     }
 
-    public void clear(){
-        sharedPreferences.edit().remove( TOKEN_KEY ).apply();
+    public String getToken() {
+        return sharedPreferences.getString(TOKEN_KEY, null);
+    }
+
+    public void clear() {
+        sharedPreferences.edit().remove(TOKEN_KEY).apply();
     }
 }
