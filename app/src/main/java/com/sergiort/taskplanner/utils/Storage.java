@@ -24,6 +24,10 @@ public class Storage {
         return sharedPreferences.getString(TOKEN_KEY, null);
     }
 
+    public boolean containsToken() {
+        return sharedPreferences.contains( TOKEN_KEY );
+    }
+
     public void clear() {
         sharedPreferences.edit().remove(TOKEN_KEY).apply();
     }

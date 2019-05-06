@@ -5,10 +5,10 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.sergiort.taskplanner.R;
 import com.sergiort.taskplanner.network.RetrofitConnection;
 import com.sergiort.taskplanner.network.data.LoginWrapper;
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         this.passwordEditText = findViewById(R.id.editTextPassword);
     }
 
-    public void onLogin(View button) {
+    public void onLogin(final View button) {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         if(!username.isEmpty() && !password.isEmpty()){
@@ -55,9 +55,12 @@ public class LoginActivity extends AppCompatActivity {
                         Response<Token> response = call.execute();
                         if(response.isSuccessful()){
                             Token token = response.body();
+
                             storage.saveToken(token);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
+                        }else{
+                            showErrorMessage(button);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -65,6 +68,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+
+    private void showErrorMessage( final View view ) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                view.setEnabled(true);
+                Snackbar.make(view, getString(R.string.server_error_message), Snackbar.LENGTH_LONG);
+            }
+        });
+
     }
 
 }
