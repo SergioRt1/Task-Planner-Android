@@ -2,12 +2,17 @@ package com.sergiort.taskplanner.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import android.view.View;
+
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import android.view.MenuItem;
+
 import com.google.android.material.navigation.NavigationView;
 import com.sergiort.taskplanner.R;
 import com.sergiort.taskplanner.network.RetrofitConnection;
@@ -18,6 +23,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 
 import java.io.IOException;
@@ -30,17 +38,22 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private Storage storage;
-    private final ExecutorService executorService = Executors.newFixedThreadPool( 1 );
+
+    private RecyclerView recyclerView;
+    private TasksAdapter tasksAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storage = new Storage( this );
-        RetrofitConnection.setStorage(this.storage);
+        storage = new Storage(this);
         setContentView(R.layout.activity_main);
+        RetrofitConnection.setStorage(this.storage);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,28 +62,52 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //test getTasks from API
+        recyclerView = findViewById(R.id.recyclerView);
+        configureRecyclerView();
+
+        getTasksFromAPI();
+    }
+
+    private void getTasksFromAPI() {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     Response<List<Task>> response = RetrofitConnection.getTaskService().getTaskByUser("SergioRt").execute();
                     if (response.isSuccessful()) {
-                        List<Task> tasks = response.body();
+                        final List<Task> tasks = response.body();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tasksAdapter.updateTasks(tasks);
+                            }
+                        });
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    private void configureRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        tasksAdapter = new TasksAdapter();
+        recyclerView.setAdapter(tasksAdapter);
     }
 
     @Override
@@ -82,6 +119,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
