@@ -1,5 +1,7 @@
 package com.sergiort.taskplanner.network.data;
 
+import java.util.Date;
+
 public class Task {
 
     private String id;

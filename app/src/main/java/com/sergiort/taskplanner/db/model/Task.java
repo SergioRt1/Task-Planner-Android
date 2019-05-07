@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
+
+import com.sergiort.taskplanner.db.utils.DateConverter;
 
 import java.util.Date;
 
@@ -14,8 +17,9 @@ import java.util.Date;
                 childColumns = "owner"),
         @ForeignKey(entity = User.class,
                 parentColumns = "username",
-                childColumns = "responsible")
+                childColumns = "responsibleName")
 })
+@TypeConverters(DateConverter.class)
 public class Task {
 
     @PrimaryKey
@@ -24,7 +28,8 @@ public class Task {
 
     private String owner;
     private Date dueDate;
-    private String responsible;
+    private String responsibleName;
+    private String responsibleEmail;
     private String state;
     private String description;
 
@@ -53,12 +58,20 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public String getResponsible() {
-        return responsible;
+    public String getResponsibleName() {
+        return responsibleName;
     }
 
-    public void setResponsible(String responsible) {
-        this.responsible = responsible;
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
+    }
+
+    public String getResponsibleEmail() {
+        return responsibleEmail;
+    }
+
+    public void setResponsibleEmail(String responsibleEmail) {
+        this.responsibleEmail = responsibleEmail;
     }
 
     public String getState() {

@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import androidx.room.Update;
 
 import com.sergiort.taskplanner.db.utils.DateConverter;
-import com.sergiort.taskplanner.network.data.Task;
+import com.sergiort.taskplanner.db.model.Task;
 
 import static androidx.room.OnConflictStrategy.IGNORE;
 import static androidx.room.OnConflictStrategy.REPLACE;

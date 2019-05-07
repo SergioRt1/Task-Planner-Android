@@ -18,6 +18,7 @@ import com.sergiort.taskplanner.R;
 import com.sergiort.taskplanner.network.RetrofitConnection;
 import com.sergiort.taskplanner.network.data.Task;
 import com.sergiort.taskplanner.utils.Storage;
+import com.sergiort.taskplanner.utils.TaskNetworkToDB;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -85,11 +87,15 @@ public class MainActivity extends AppCompatActivity
                 try {
                     Response<List<Task>> response = RetrofitConnection.getTaskService().getTaskByUser("SergioRt").execute();
                     if (response.isSuccessful()) {
-                        final List<Task> tasks = response.body();
+                        List<Task> tasks = response.body();
+                        final List<com.sergiort.taskplanner.db.model.Task> taskDb = new ArrayList<>();
+                        for (int i = 0; i < tasks.size() ; i++){
+                            taskDb.add(TaskNetworkToDB.taskNetworkToDB(tasks.get(i)));
+                        }
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                tasksAdapter.updateTasks(tasks);
+                                tasksAdapter.updateTasks(taskDb);
                             }
                         });
                     }

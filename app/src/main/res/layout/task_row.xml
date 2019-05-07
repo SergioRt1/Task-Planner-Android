@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         app:cardCornerRadius="15dp"
-        app:contentPaddingRight="10dp"
-        app:contentPaddingLeft="10dp"
-        app:cardElevation="10dp">
+        app:cardElevation="7dp"
+        app:contentPadding="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/task_description"
-                android:text="Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
                 android:gravity="start"
-                android:textSize="15dp"/>
+                android:text="Description"
+                android:textSize="15dp" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/task_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/task_due_date"
+                android:layout_alignTop="@id/task_due_date"
+                android:layout_alignBottom="@id/task_due_date"
+                android:layout_marginLeft="15dp"
                 android:text="State"
-                android:gravity="end"
-                android:textSize="15dp"/>
+                android:textSize="15dp" />
 
+            <TextView
+                android:id="@+id/task_due_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/task_description"
+                android:text="Date?"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/responsible_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/task_due_date"
+                android:text="Responsible's name"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/responsible_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/responsible_name"
+                android:text="Responsible's email"
+                android:textColor="@color/greySecondary"
+                android:textSize="15dp" />
 
         </RelativeLayout>
 
